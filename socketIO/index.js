@@ -1,7 +1,7 @@
 module.exports = function (server) {
     // 得到 IO 对象
     const io = require('socket.io')(server);
-    const {ChatModel} = require('../db/models');
+    const {ChatModel} = require('../models/chat');
 
     // 监视连接(当有一个客户连接上时回调)
     io.on('connection', function (socket) {
