@@ -85,6 +85,9 @@ router.post('/login', function (req, res) {
     if (user) {
       //3.返回响应数据"登录成功"
       const { _id: id, username } = user
+      //生成一个cookie,并交给浏览器保存
+      res.cookie('userid', id, { maxAge: 1000 * 60 * 60 * 24 * 7 });
+
       res.send({ code: 200, result: { id, username }, success: true, message: '登录成功'});
     } else {
       res.send({ code: 500, message: "用户名或密码不正确！", success: false, result: null })

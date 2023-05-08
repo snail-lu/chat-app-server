@@ -3,6 +3,8 @@ var router = express.Router();
 
 // 引入ChatModel
 const { ChatModel } = require('../models/chat');
+// 引入UserModel
+const { UserModel } = require('../models/user');
 
 //过滤属性
 const filter = { password: 0, __v: 0 };
@@ -41,7 +43,7 @@ router.get('/msglist',function(req,res){
 
     //查询userid相关的所有聊天信息
     ChatModel.find({'$or':[{from:userid},{to:userid}]},filter,function(err,chatMsgs) {
-      res.send({code: 0, data: {users, chatMsgs}})  //更新的数量
+      res.send({code: 200, result: {users, chatMsgs}, success: true, message: '查询成功'})  //更新的数量
     })
   })
 
