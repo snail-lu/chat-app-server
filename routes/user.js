@@ -32,7 +32,7 @@ const filter = { password: 0, __v: 0 };
 
 router.post('/register', function (req, res) {
   //1.获取请求参数
-  const { username, password } = req.body;
+  const { username, password, avatar } = req.body;
 
   if (!username) {
     res.send({ code: 500, message: '用户名不可为空', success: false, result: null })
@@ -51,7 +51,7 @@ router.post('/register', function (req, res) {
       res.send({ code: 500, message: '此用户名已存在', success: false, result: null });
     } else {
       //3.返回响应数据
-      const userModel = new UserModel({ username, password });
+      const userModel = new UserModel({ username, password, avatar: avatar||'头像1' });
       userModel.save(function (error, user) {
         console.log(user, 'res')
         //生成一个cookie,并交给浏览器保存
@@ -89,8 +89,8 @@ router.post('/login', function (req, res) {
       res.cookie('userid', id, { maxAge: 1000 * 60 * 60 * 24 * 7 });
 
       res.send({ code: 200, result: { id, username }, success: true, message: '登录成功'});
-    } else {
-      res.send({ code: 500, message: "用户名或密码不正确！", success: false, result: null })
+    } else if(error) {
+      res.send({ code: 500, message: "查询失败", success: false, result: error })
     }
   })
 
@@ -118,11 +118,17 @@ router.get('/detail',function(req,res){
   //判断缓存中的userid是否存在
   if(!userid) {
     //3.返回响应数据"登录成功"
-    res.send({code: 1, msg: "请先登录"});
+    res.send({code: 200, success: false, result: '', message: "请先登录" });
   }
   //3.根据userid查询对应的用户信息
-  UserModel.findOne({_id:userid},filter,function(error,user) {
-    res.send({code: 0, data: user});
+  UserModel.findOne({ _id: userid }, filter, function(error,user) {
+    if(user) {
+      res.send({ code: 200, result: user, success: true, message: '查询成功' });
+    } else if(error) {
+      res.send({ code: 500, result: error, success: false, message: '查询失败' });
+    } else {
+      res.send({ code: 200, result: null, success: true, message: '未查到该用户' });
+    }
   })
 
 })
@@ -144,10 +150,14 @@ router.get('/detail',function(req,res){
  */
 router.post('/list',function(req,res){
   //1.获取用户类型
-  const {type} = req.body;
+  const userid = req.cookies.userid;
 
-  UserModel.find({type},filter,function(error,user) {
-    res.send({code: 0, data: user});
+  UserModel.find({ _id: { $ne: userid }},filter,function(error,user) {
+    if(user) {
+      res.send({ code: 200, result: user, success: true, message: '查询成功'});
+    } else {
+      res.send({ code: 200, message: "查询成功", success: false, result: [] })
+    }
   })
 
 })
