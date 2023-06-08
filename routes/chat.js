@@ -38,7 +38,7 @@ router.get('/msglist',function(req,res){
   UserModel.find(function(error,userDocs) {
     const users = {};
     userDocs.forEach(doc=>{
-      users[doc._id] = {username: doc.username,header:doc.header}
+      users[doc._id] = {username: doc.username, avatar:doc.avatar}
     })
 
     //查询userid相关的所有聊天信息
