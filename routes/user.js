@@ -119,6 +119,7 @@ router.get('/detail',function(req,res){
   if(!userid) {
     //3.返回响应数据"登录成功"
     res.send({code: 200, success: false, result: '', message: "请先登录" });
+    return
   }
   //3.根据userid查询对应的用户信息
   UserModel.findOne({ _id: userid }, filter, function(error,user) {
