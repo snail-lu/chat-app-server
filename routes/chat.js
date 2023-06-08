@@ -24,14 +24,14 @@ const filter = { password: 0, __v: 0 };
 
 //路由：获取当前用户所有相关聊天信息列表
 /**
- * @route POST /chat/msglist
+ * @route POST /chat/list
  * @summary 消息列表
  * @group chat - 聊天模块
  * @param {UserParams.model} request.cookie.required - 参数
  * @returns {Response.model} 200 - OK
  * @returns {Error} 404 - Not Found
  */
-router.get('/msglist',function(req,res){
+router.get('/list',function(req,res){
   //1.获取cookie中的用户id
   const userid = req.cookies.userid;
 
@@ -45,6 +45,25 @@ router.get('/msglist',function(req,res){
     ChatModel.find({'$or':[{from:userid},{to:userid}]},filter,function(err,chatMsgs) {
       res.send({code: 200, result: {users, chatMsgs}, success: true, message: '查询成功'})  //更新的数量
     })
+  })
+
+})
+
+//路由：获取当前会话的聊天信息列表
+/**
+ * @route POST /chat/detail
+ * @summary 消息列表
+ * @group chat - 聊天模块
+ * @param {UserParams.model} request.cookie.required - 参数
+ * @returns {Response.model} 200 - OK
+ * @returns {Error} 404 - Not Found
+ */
+router.get('/list',function(req,res){
+  const {chat_id} = req.body;
+
+  //查询userid相关的所有聊天信息
+  ChatModel.find({'$or':[{ chat_id }]},filter,function(err, result) {
+    res.send({code: 200, result, success: true, message: '查询成功'})  //更新的数量
   })
 
 })
