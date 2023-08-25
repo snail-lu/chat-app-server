@@ -90,7 +90,9 @@ router.post('/login', function (req, res) {
 
       res.send({ code: 200, result: { id, username }, success: true, message: '登录成功'});
     } else if(error) {
-      res.send({ code: 500, message: "查询失败", success: false, result: error })
+      res.send({ code: 500, message: "用户名或密码不正确", success: false, result: error })
+    } else {
+      res.send({ code: 500, message: "用户名或密码不正确", success: false, result: null })
     }
   })
 
