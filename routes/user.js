@@ -185,20 +185,20 @@ router.post('/update',function(req,res){
   //判断缓存中的userid是否存在
   if(!userid) {
     //3.返回响应数据"登录成功"
-    res.send({code: 1, msg: "请先登录"});
+    res.send({ code: 500, msg: "请先登录" });
   }
   //3.根据userid更新对应的用户信息
   const user = req.body;
-  UserModel.findByIdAndUpdate({_id:userid},user,function(error,oldUser){
+  UserModel.findByIdAndUpdate({ _id: userid },user,function(error,oldUser){
     if(!oldUser){  //cookie中保存的userid在数据库中没有相应的用户信息
       //通知浏览器删除这个没用的userid cookie
       res.clearCookie('userid');
       //返回一个提示信息
-      res.send({code:1,msg:'请先登录'})
-    }else{
-      const {_id,username,type} = oldUser;
-      const data = Object.assign(user,{_id,username,type});
-      res.send({code:0,data})
+      res.send({ code: 500, message: "请先登录", success: false, result: [] })
+    } else {
+      const { _id } = oldUser
+      const data = { _id, ...user }
+      res.send({ code: 200, message: "更新成功", success: true, result: data })
     }
   })
 
