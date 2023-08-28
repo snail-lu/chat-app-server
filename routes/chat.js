@@ -43,7 +43,7 @@ router.get('/list',function(req,res){
 
     //查询userid相关的所有聊天信息
     ChatModel.find({'$or':[{from:userid},{to:userid}]},filter,function(err,chatMsgs) {
-      res.send({code: 200, result: {users, chatMsgs}, success: true, message: '查询成功'})  //更新的数量
+      res.send({code: 200, result: {users, chatMsgs, userid}, success: true, message: '查询成功'})  //更新的数量
     })
   })
 
@@ -58,12 +58,12 @@ router.get('/list',function(req,res){
  * @returns {Response.model} 200 - OK
  * @returns {Error} 404 - Not Found
  */
-router.get('/list',function(req,res){
+router.post('/detail',function(req,res){
   const {chat_id} = req.body;
 
-  //查询userid相关的所有聊天信息
+  //查询chat_id相关的所有聊天信息
   ChatModel.find({'$or':[{ chat_id }]},filter,function(err, result) {
-    res.send({code: 200, result, success: true, message: '查询成功'})  //更新的数量
+    res.send({code: 200, result, success: true, message: '查询成功'})
   })
 
 })
