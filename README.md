@@ -41,19 +41,15 @@ chat-app-server
 
 ```
 
-## 常用命令
-1. 启动数据库
+## 基本使用
 ```bash
+# 启动数据库
 mongod --config /usr/local/etc/mongod.conf
-```
-2. 测试连接数据库
 
-```bash
+# 测试连接数据库
 mongo
-```
 
-3. 本地启动
-```bash
+# 本地启动
 npm start
 ```
 
